@@ -9,11 +9,11 @@ export default class Player{
         this.position = position;
     }
 
-    setPosition(position: number){
+    public setPosition(position: number){
         this.position = position;
     }
 
-    setName(name: string){
+    public setName(name: string){
         this.name = name;
     }
 }

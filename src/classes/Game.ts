@@ -26,14 +26,32 @@ export default class Game{
     }
 
     public startGame(){
-        //Dice roll starts
+       //TODO
+
+       //Dice roll
+       //Move player
+       //Check winner
     }
 
     public showResult(){
-        //Show players array ordered by position
+        const sortedPlayers = this.players.sort((a, b) => b.position - a.position);
+        this.players.forEach((player, index)=>{
+            console.log(`${index + 1} - ${player.name} is on square ${player.position}`);
+        });
     }
 
-    movePlayer(player: Player){
-        //Move the player
+    public movePlayer(player: Player, positions: number){
+        if(player.position + positions <= 100){
+            player.setPosition(player.position + positions);
+            console.log(`${player.name} dice roll: ${positions} - moves to position: ${player.position}`);
+        }else{
+            console.log(`${player.name} dice roll: ${positions} - stays in position: ${player.position}`);
+        }
+    }
+
+    public checkWinner(player: Player){
+        if(player.position >= this.board.size){
+            console.log(`${player.name} is the winner!`);
+        }
     }
 }
