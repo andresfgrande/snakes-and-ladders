@@ -7,10 +7,10 @@ export default class Game{
     players: Player[];
     dice: Dice;
 
-    constructor(board: Board, players: Player[], dice: Dice){
-        this.board = board;
-        this.players = players;
-        this.dice = dice;
+    constructor(){
+        this.board = new Board(100);
+        this.players = [];
+        this.dice = new Dice(6);
     }
 
     public addPlayer(player: Player){
@@ -28,9 +28,23 @@ export default class Game{
     public startGame(){
        //TODO
 
+       //Add players
        //Dice roll
        //Move player
        //Check winner
+
+        let playing = true;
+
+        while(playing){
+           
+            this.players.forEach((player)=>{
+                this.movePlayer(player, this.dice.roll());
+                this.showResult();
+                playing = !this.isWinner(player);
+                console.log('--------------');
+            });
+        }
+
     }
 
     public showResult(){
@@ -49,9 +63,11 @@ export default class Game{
         }
     }
 
-    public checkWinner(player: Player){
+    public isWinner(player: Player): boolean{
         if(player.position >= this.board.size){
             console.log(`${player.name} is the winner!`);
+            return true;
         }
+        return false;
     }
 }
