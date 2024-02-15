@@ -18,8 +18,10 @@ export default class Game{
         this.currentPlayerIndex = 0;
     }
 
-    public addPlayer(player: Player){
-        this.players.push(player);
+    public addPlayer(name: string){
+        let initialPosition: number = 1;
+        const newPlayer: Player = new Player(this.getPlayersCount() + 1, name, initialPosition);
+        this.players.push(newPlayer);
     }
 
     public setBoard(board: Board){
@@ -83,5 +85,10 @@ export default class Game{
 
     public getMinPlayersNum(): number {
         return this.minPlayersNum;
+    }
+
+    public endGame(): void {
+        this.players = [];
+        this.currentPlayerIndex = 0;
     }
 }
