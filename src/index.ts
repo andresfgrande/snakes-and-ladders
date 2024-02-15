@@ -1,13 +1,13 @@
-import Game from "./classes/Game";
+import Game from "./services/Game";
 import readline from "readline";
-import Player from "./classes/Player"; 
+import Player from "./models/Player"; 
 
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-const game = new Game();
+const snakesAndLadders = new Game(100, 6, 2);
 
 function mainMenu() {2
     console.log("\nSnakes and Ladders");
@@ -17,7 +17,7 @@ function mainMenu() {2
     rl.question("Select an option: ", (answer) => {
         switch (answer) {
             case '1':
-                addPlayer();2
+                addPlayer();
                 break;
             case '2':
                 startGame();
@@ -34,17 +34,18 @@ function mainMenu() {2
 }
 
 function gameMenu() {
-    console.clear();
     console.log("\nSnakes and Ladders");
     console.log("1. Roll Dice and move");
     console.log("2. Finish Game");
     rl.question("Select an option: ", (answer) => {
         switch (answer) {
             case '1':
-                //Roll dice and move
+                console.clear();
+                snakesAndLadders.nextTurn();
+                gameMenu();
                 break;
             case '2':
-                //Finish game and go to main menu
+                //TODO finish and reset game
                 mainMenu();
                 break;
             default:
@@ -58,9 +59,9 @@ function gameMenu() {
 function addPlayer() {
     console.clear();
     rl.question("Enter player name: ", (name) => {
-        const id = game.players.length + 1;
+        const id = snakesAndLadders.getPlayersCount() + 1;
         const player = new Player(id, name, 1);
-        game.addPlayer(player);
+        snakesAndLadders.addPlayer(player);
         console.log(`${name} added.`);
         mainMenu();
     });
@@ -68,13 +69,18 @@ function addPlayer() {
 
 function startGame() {
     console.clear();
-    if (game.players.length < 2) {
-        console.log("At least two players are required to start the game.");
+    if (snakesAndLadders.getPlayersCount() < snakesAndLadders.getMinPlayersNum()) {
+        console.log(`At least ${snakesAndLadders.getMinPlayersNum()} players are required to start the game.`);
+        console.log("-----------------------------------------------------");
         mainMenu();
     } else {
-        game.startGame();
-        mainMenu();
+        console.log("Starting the game...");
+        console.log("---------------------");
+        snakesAndLadders.showCurrentPlayer();
+        gameMenu(); 
     }
 }
+
+//TODO nextTurn() and endGame()
 
 mainMenu(); 
