@@ -1,6 +1,7 @@
 import Board from "../models/Board";
 import Dice from "../models/Dice";
 import Player from "../models/Player";
+import { TurnResult, Score, MoveResult } from "../interfaces/IGame";
 
 export default class Game{
     board: Board;
@@ -18,68 +19,62 @@ export default class Game{
         this.currentPlayerIndex = 0;
     }
 
-    public addPlayer(name: string){
+    public addPlayer(name: string): void{
         let initialPosition: number = 1;
         const newPlayer: Player = new Player(this.getPlayersCount() + 1, name, initialPosition);
         this.players.push(newPlayer);
     }
 
-    public setBoard(board: Board){
-        this.board = board;
-    }
+    public nextTurn(): TurnResult {
+        const player: Player = this.players[this.currentPlayerIndex];
+        const prevPosition: number = player.position;
+        const roll: number = this.dice.roll();
+        const moveResult: MoveResult = this.movePlayer(player, roll);
 
-    public setDice(dice: Dice){
-        this.dice = dice;
-    }
-
-    //TODO change agnostic
-    public nextTurn(): void {
-        const player = this.players[this.currentPlayerIndex];
-        
-        this.movePlayer(player, this.dice.roll());
-        this.showResult();
-        this.isWinner(player);
-        
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.players.length;
+
+        return {
+            currentPlayer: player.name, 
+            isWinner: this.isWinner(player), 
+            playerMoves: moveResult.playerMoves, 
+            prevPosition: prevPosition,
+            newPosition: moveResult.playerPosition,
+            diceRoll: roll
+        };
     }
 
-   
-    //TODO change agnostic
-    public showResult(): void{
+    public getScores(): Score[] {
+  
         const auxPlayers: Player[] = this.players.slice();
-        const sortedPlayers = auxPlayers.sort((a, b) => b.position - a.position);
+        const sortedPlayers: Player[] = auxPlayers.sort((a, b) => b.position - a.position);
 
-        sortedPlayers.forEach((player, index)=>{
-            console.log(`${index + 1} - ${player.name} is on square ${player.position}`);
+       return sortedPlayers.map((player, index)=>{
+            return {
+                ranking: index + 1,
+                name: player.name,
+                position: player.position
+            }
         });
     }
 
-
-    //TODO change agnostic
-    public movePlayer(player: Player, positions: number){
+    public movePlayer(player: Player, positions: number): MoveResult {
+        let playerMoves: boolean = false;
         if(player.position + positions <= this.board.size){
             player.setPosition(player.position + positions);
-            console.log(`${player.name} -> dice roll: ${positions} - moves to position: ${player.position}`);
-            console.log("--------------------------------------------");
-        }else{
-            console.log(`${player.name} -> dice roll: ${positions} - stays in position: ${player.position}`);
-            console.log("--------------------------------------------");
+            playerMoves = true;
         }
+        return {
+            playerMoves: playerMoves, 
+            playerPosition: player.position
+        };
     }
 
-    //TODO change agnostic
     public isWinner(player: Player): boolean{
-        if(player.position >= this.board.size){
-            console.log(`${player.name} wins!`);
-            return true;
-        }
-        return false;
+        return player.position >= this.board.size;
     }
 
-    //Cambiar a get current player y mostrar en consola desde el menu
-    public showCurrentPlayer(): void{
-        const player = this.players[this.currentPlayerIndex];
-        console.log(`${player.name}'s turn.`);
+    public getCurrentPlayer(): string{
+        return this.players[this.currentPlayerIndex].name;;
     }
 
     public getPlayersCount(): number {

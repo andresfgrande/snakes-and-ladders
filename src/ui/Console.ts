@@ -1,7 +1,8 @@
 import Game from "../core/services/Game";
 import { rl } from "../utils/utilities";
+import { TurnResult } from "../core/interfaces/IGame";
 
-export default class Menu{
+export default class Console{
     game: Game;
     constructor(game: Game){
         this.game = game;
@@ -24,7 +25,8 @@ export default class Menu{
                     rl.close();
                     break;
                 default:
-                    this.invalidOption();
+                    console.clear();
+                    this.printMessage("Invalid option, try again.");
                     this.mainMenu();
                     break;
             }
@@ -44,8 +46,9 @@ export default class Menu{
                     this.endGame();
                     break;
                 default:
-                    this.invalidOption();
-                    this.game.showCurrentPlayer();
+                    console.clear();
+                    this.printMessage("Invalid option, try again.");
+                    this.printMessage(`${this.game.getCurrentPlayer()}'s turn.`);
                     this.gameMenu();
                     break;
             }
@@ -56,7 +59,7 @@ export default class Menu{
         console.clear();
         rl.question("Enter player name: ", (name) => {
             this.game.addPlayer(name);
-            console.log(`${name} added.`);
+            this.printMessage(`${name} added.`);
             this.mainMenu();
         });
     }
@@ -64,29 +67,32 @@ export default class Menu{
     public startGame():void {
         console.clear();
         if (this.game.getPlayersCount() < this.game.getMinPlayersNum()) {
-            console.log(`At least ${this.game.getMinPlayersNum()} players are required to start the game.`);
-            console.log("-----------------------------------------------------");
+            this.printMessage(`At least ${this.game.getMinPlayersNum()} players are required to start the game.`);
             this.mainMenu();
         } else {
-            console.log("Starting the game...");
-            console.log("---------------------");
-            this.game.showResult()
-            console.log("---------------------");
-            this.game.showCurrentPlayer();
+            this.printMessage("Starting the game...");
+            this.showScores();
+            this.printMessage(`${this.game.getCurrentPlayer()}'s turn.`);
             this.gameMenu(); 
         }
     }
-
 
     public play(): void{
         this.mainMenu();
     }
 
     public nextTurn(): void{
-        console.clear();
-        this.game.nextTurn();
-        console.log("--------------------------------------------");
-        this.game.showCurrentPlayer();
+        console.clear();  
+
+        const turnResult: TurnResult = this.game.nextTurn();
+        this.showScores();
+        this.printMessage(`${turnResult.currentPlayer} -> dice roll: ${turnResult.diceRoll} - moves from square ${turnResult.prevPosition} to square ${turnResult.newPosition}`);
+
+        if(turnResult.isWinner){
+            this.printMessage(`${turnResult.currentPlayer} wins!`);
+        }
+
+        this.printMessage(`${this.game.getCurrentPlayer()}'s turn.`);
         this.gameMenu();
     }
 
@@ -96,10 +102,22 @@ export default class Menu{
         this.mainMenu();
     }
 
-    public invalidOption(): void{
-        console.clear();
-        console.log("Invalid option, try again.");
-        console.log("---------------------------");
+    public showScores(): void{
+        this.divider();
+        this.game.getScores().forEach((player, index)=>{
+            console.log(`${index + 1} - ${player.name} is on square ${player.position}`);
+        });
+        this.divider();
+    }
+
+    public printMessage(message: string): void {
+        this.divider();
+        console.log(message);
+        this.divider();
+    }
+
+    public divider(): void {
+        console.log("-------------------------------------------------");
     }
 
 }
