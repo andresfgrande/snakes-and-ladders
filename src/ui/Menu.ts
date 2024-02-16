@@ -1,5 +1,5 @@
-import Game from "../../core/services/Game";
-import { rl } from "../../utils/utilities";
+import Game from "../core/services/Game";
+import { rl } from "../utils/utilities";
 
 export default class Menu{
     game: Game;
@@ -70,6 +70,8 @@ export default class Menu{
         } else {
             console.log("Starting the game...");
             console.log("---------------------");
+            this.game.showResult()
+            console.log("---------------------");
             this.game.showCurrentPlayer();
             this.gameMenu(); 
         }
@@ -83,6 +85,8 @@ export default class Menu{
     public nextTurn(): void{
         console.clear();
         this.game.nextTurn();
+        console.log("--------------------------------------------");
+        this.game.showCurrentPlayer();
         this.gameMenu();
     }
 

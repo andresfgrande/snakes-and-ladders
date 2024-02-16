@@ -32,6 +32,7 @@ export default class Game{
         this.dice = dice;
     }
 
+    //TODO change agnostic
     public nextTurn(): void {
         const player = this.players[this.currentPlayerIndex];
         
@@ -40,12 +41,10 @@ export default class Game{
         this.isWinner(player);
         
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.players.length;
-       
-        console.log("--------------------------------------------");
-        this.showCurrentPlayer();
     }
 
    
+    //TODO change agnostic
     public showResult(): void{
         const auxPlayers: Player[] = this.players.slice();
         const sortedPlayers = auxPlayers.sort((a, b) => b.position - a.position);
@@ -55,6 +54,8 @@ export default class Game{
         });
     }
 
+
+    //TODO change agnostic
     public movePlayer(player: Player, positions: number){
         if(player.position + positions <= this.board.size){
             player.setPosition(player.position + positions);
@@ -66,6 +67,7 @@ export default class Game{
         }
     }
 
+    //TODO change agnostic
     public isWinner(player: Player): boolean{
         if(player.position >= this.board.size){
             console.log(`${player.name} wins!`);
@@ -74,6 +76,7 @@ export default class Game{
         return false;
     }
 
+    //Cambiar a get current player y mostrar en consola desde el menu
     public showCurrentPlayer(): void{
         const player = this.players[this.currentPlayerIndex];
         console.log(`${player.name}'s turn.`);

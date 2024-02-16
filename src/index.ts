@@ -1,5 +1,5 @@
 import Game from "./core/services/Game";
-import Menu from "./ui/services/Menu";
+import Menu from "./ui/Menu";
 
 let boardSize: number = 100;
 let diceFaces: number = 6;
