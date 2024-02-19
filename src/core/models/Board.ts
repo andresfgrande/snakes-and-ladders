@@ -1,6 +1,15 @@
 export default class Board{
-    size:number;
+    private size:number;
+    
     constructor(size: number){
+        this.size = size;
+    }
+
+    public getSize(): number{
+        return this.size;
+    }
+
+    public setSize(size: number){
         this.size = size;
     }
 }

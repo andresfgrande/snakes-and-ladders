@@ -1,5 +1,5 @@
 export interface TurnResult{
-    currentPlayer: string;
+    playerName: string;
     isWinner: boolean;
     playerMoves: boolean;
     prevPosition: number;

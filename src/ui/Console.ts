@@ -9,7 +9,7 @@ export default class Console{
     }
        
     public mainMenu():void {
-        console.log("\nSnakes and Ladders");
+        console.log("\nSNAKES AND LADDERS");
         console.log("1. Add Player");
         console.log("2. Start Game");
         console.log("3. Exit");
@@ -34,7 +34,7 @@ export default class Console{
     }
 
     public gameMenu():void {
-        console.log("\nSnakes and Ladders");
+        console.log("\nSNAKES AND LADDERS");
         console.log("1. Roll Dice and move");
         console.log("2. Finish Game");
         rl.question("Select an option: ", (answer) => {
@@ -48,7 +48,7 @@ export default class Console{
                 default:
                     console.clear();
                     this.printMessage("Invalid option, try again.");
-                    this.printMessage(`${this.game.getCurrentPlayer()}'s turn.`);
+                    this.printMessage(`${this.game.getCurrentPlayerName()}'s turn.`);
                     this.gameMenu();
                     break;
             }
@@ -66,14 +66,14 @@ export default class Console{
 
     public startGame():void {
         console.clear();
-        if (this.game.getPlayersCount() < this.game.getMinPlayersNum()) {
-            this.printMessage(`At least ${this.game.getMinPlayersNum()} players are required to start the game.`);
-            this.mainMenu();
-        } else {
+        if (this.game.isReadyToStart()) {
             this.printMessage("Starting the game...");
             this.showScores();
-            this.printMessage(`${this.game.getCurrentPlayer()}'s turn.`);
+            this.printMessage(`${this.game.getCurrentPlayerName()}'s turn.`);
             this.gameMenu(); 
+        } else {
+            this.printMessage(`At least ${this.game.getMinPlayersNum()} players are required to start the game.`);
+            this.mainMenu();
         }
     }
 
@@ -86,13 +86,20 @@ export default class Console{
 
         const turnResult: TurnResult = this.game.nextTurn();
         this.showScores();
-        this.printMessage(`${turnResult.currentPlayer} -> dice roll: ${turnResult.diceRoll} - moves from square ${turnResult.prevPosition} to square ${turnResult.newPosition}`);
-
-        if(turnResult.isWinner){
-            this.printMessage(`${turnResult.currentPlayer} wins!`);
+        if(turnResult.playerMoves){
+            this.printMessage(`${turnResult.playerName}  `+
+                              `-> dice roll: ${turnResult.diceRoll} `+
+                              `- moves from square ${turnResult.prevPosition} to square ${turnResult.newPosition}`);
+        }else{
+            this.printMessage(`${turnResult.playerName} -> dice roll: ${turnResult.diceRoll} `+
+                              `- stays in square ${turnResult.newPosition}`);
         }
 
-        this.printMessage(`${this.game.getCurrentPlayer()}'s turn.`);
+        if(turnResult.isWinner){
+            this.printMessage(`${turnResult.playerName} wins!`);
+        }
+
+        this.printMessage(`${this.game.getCurrentPlayerName()}'s turn.`);
         this.gameMenu();
     }
 
