@@ -3,12 +3,12 @@ import { rl } from "../utils/utilities";
 import { TurnResult } from "../core/interfaces/IGame";
 
 export default class Console{
-    game: Game;
+    private game: Game;
     constructor(game: Game){
         this.game = game;
     }
        
-    public mainMenu():void {
+    private mainMenu():void {
         console.log("\nSNAKES AND LADDERS");
         console.log("1. Add Player");
         console.log("2. Start Game");
@@ -33,7 +33,7 @@ export default class Console{
         });
     }
 
-    public gameMenu():void {
+    private gameMenu():void {
         console.log("\nSNAKES AND LADDERS");
         console.log("1. Roll Dice and move");
         console.log("2. Finish Game");
@@ -55,7 +55,7 @@ export default class Console{
         });
     }
 
-    public addPlayer():void {
+    private addPlayer():void {
         console.clear();
         rl.question("Enter player name: ", (name) => {
             this.game.addPlayer(name);
@@ -64,7 +64,7 @@ export default class Console{
         });
     }
 
-    public startGame():void {
+    private startGame():void {
         console.clear();
         if (this.game.isReadyToStart()) {
             this.printMessage("Starting the game...");
@@ -81,7 +81,7 @@ export default class Console{
         this.mainMenu();
     }
 
-    public nextTurn(): void{
+    private nextTurn(): void{
         console.clear();  
 
         const turnResult: TurnResult = this.game.nextTurn();
@@ -103,13 +103,13 @@ export default class Console{
         this.gameMenu();
     }
 
-    public endGame(): void{
+    private endGame(): void{
         console.clear();
         this.game.endGame();
         this.mainMenu();
     }
 
-    public showScores(): void{
+    private showScores(): void{
         this.divider();
         this.game.getScores().forEach((player, index)=>{
             console.log(`${index + 1} - ${player.name} is on square ${player.position}`);
@@ -117,13 +117,13 @@ export default class Console{
         this.divider();
     }
 
-    public printMessage(message: string): void {
+    private printMessage(message: string): void {
         this.divider();
         console.log(message);
         this.divider();
     }
 
-    public divider(): void {
+    private divider(): void {
         console.log("-------------------------------------------------");
     }
 
