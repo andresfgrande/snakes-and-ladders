@@ -14,7 +14,6 @@ export default class Game{
         this.minPlayersNum = minPlayersNum;
         this.board = new Board(boardSize);
         this.dice = new Dice(diceFaces);
-        this.minPlayersNum = minPlayersNum;
         this.players = [];
         this.currentPlayerIndex = 0;
     }

@@ -58,9 +58,13 @@ export default class Console{
     private addPlayer():void {
         console.clear();
         rl.question("Enter player name: ", (name) => {
-            this.game.addPlayer(name);
-            this.printMessage(`${name} added.`);
-            this.mainMenu();
+            if (!name.trim()) {
+                this.addPlayer();
+            } else {
+                this.game.addPlayer(name.trim());
+                this.printMessage(`${name} added.`);
+                this.mainMenu();
+            }
         });
     }
 
