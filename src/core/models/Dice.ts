@@ -13,7 +13,7 @@ export default class Dice{
         return this.sides;
     }
 
-    public setSides(): number{
-        return this.sides;
+    public setSides(sides: number): void{
+        this.sides = sides;
     }
 }
