@@ -91,9 +91,16 @@ export default class Console{
         const turnResult: TurnResult = this.game.nextTurn();
         this.showScores();
         if(turnResult.playerMoves){
+            
+            this.printMessage(``)
             this.printMessage(`${turnResult.playerName}  `+
                               `-> dice roll: ${turnResult.diceRoll} `+
                               `- moves from square ${turnResult.prevPosition} to square ${turnResult.newPosition}`);
+
+            if(turnResult.steppedIn !== ""){
+                this.printMessage(`Stepped in ${turnResult.steppedIn} - starts at ${turnResult.start} and ends at ${turnResult.end}`);
+            }
+
         }else{
             this.printMessage(`${turnResult.playerName} -> dice roll: ${turnResult.diceRoll} `+
                               `- stays in square ${turnResult.newPosition}`);

@@ -5,6 +5,9 @@ export interface TurnResult{
     prevPosition: number;
     newPosition: number;
     diceRoll: number;
+    steppedIn: string;
+    start: number ;
+    end: number ;
 }
 
 export interface Score{
@@ -16,5 +19,8 @@ export interface Score{
 export interface MoveResult{
     playerMoves: boolean;
     playerPosition: number;
+    steppedIn: string;
+    start: number ;
+    end: number ;
 }
 

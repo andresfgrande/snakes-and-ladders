@@ -16,6 +16,8 @@ export default class Game{
         this.dice = new Dice(diceFaces);
         this.players = [];
         this.currentPlayerIndex = 0;
+        console.log('ladders: ',this.board.ladders);
+        console.log('snakes: ',this.board.snakes);
     }
 
     /**
@@ -52,7 +54,10 @@ export default class Game{
             playerMoves: moveResult.playerMoves, 
             prevPosition: prevPosition,
             newPosition: moveResult.playerPosition,
-            diceRoll: roll
+            diceRoll: roll,
+            steppedIn: moveResult.steppedIn,
+            start: moveResult.start,
+            end: moveResult.end
         };
     }
 
@@ -84,14 +89,48 @@ export default class Game{
      * Move the player to a new position on the board based on the given number of positions.
      */
     private movePlayer(player: Player, positions: number): MoveResult {
+
         let playerMoves: boolean = false;
+        let steppedIn: string = ""
+        let start: number = 0;
+        let end: number = 0;
+
         if(player.getPosition() + positions <= this.board.getSize()){
-            player.setPosition(player.getPosition()+ positions);
+
+            let newPosition: number  = player.getPosition() + positions;
+            console.log('new position: ', newPosition);
+            let snakePosition: number  = this.getSnakesAt(newPosition);
+            let ladderPosition: number  = this.getLaddersAt(newPosition);
+
+           
+
+            
+            if(snakePosition > 0){
+                start = newPosition;
+                newPosition = snakePosition;
+                steppedIn = 'snake';
+                end = snakePosition;
+                console.log('in snake');
+            }
+
+            if(ladderPosition > 0){
+                start = newPosition;
+                newPosition = ladderPosition;
+                steppedIn = 'ladder';
+                end = ladderPosition;
+                console.log('in ladder');
+            }
+
+            player.setPosition(newPosition);
             playerMoves = true;
         }
+
         return {
             playerMoves: playerMoves, 
-            playerPosition: player.getPosition()
+            playerPosition: player.getPosition(),
+            steppedIn: steppedIn,
+            start: start,
+            end: end
         };
     }
 
@@ -132,5 +171,19 @@ export default class Game{
 
     public getPlayerPosition(id: number): number {
         return this.players[id-1].getPosition();
+    }
+
+    public getSnakesAt(position: number):number {
+        if (this.board.snakes.has(position)) {
+            return this.board.snakes.get(position)!;
+        }
+        return 0;
+    }
+
+    public getLaddersAt(position: number):number{
+        if (this.board.ladders.has(position)) {
+            return this.board.ladders.get(position)!;
+        }
+        return 0;
     }
 }
